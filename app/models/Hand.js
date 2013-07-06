@@ -18,19 +18,14 @@
       this.deck = deck;
       this.isDealer = isDealer;
       if (this.scores()[0] === 21) {
-        this.stand(function() {});
+        return this.stand(function() {});
       }
-      return this.on('bust', (function() {
-        return console.warn('init -> bust');
-      }), this);
     };
 
     Hand.prototype.hit = function() {
       this.add(this.deck.pop()).last();
       if (this.scores()[0] > 21) {
-        return this.bust(function() {});
-      } else if (this.scores()[0] === 21) {
-        return this.stand(function() {});
+        return this.bust();
       }
     };
 
@@ -50,13 +45,18 @@
     };
 
     Hand.prototype.stand = function() {
-      this.trigger('stand', this);
-      return console.log('stand');
+      this.get();
+      return this.trigger('stand', this);
     };
 
     Hand.prototype.bust = function() {
-      this.trigger('stand', this);
-      return console.warn('bust');
+      return this.trigger('bust', this);
+    };
+
+    Hand.prototype.add17 = function() {
+      if (this.scores[0] < 17) {
+        return this.hit();
+      }
     };
 
     return Hand;

@@ -13,13 +13,27 @@
     }
 
     App.prototype.initialize = function() {
-      var deck;
+      var deck,
+        _this = this;
       this.set('deck', deck = new Deck());
       this.set('playerHand', deck.dealPlayer());
       this.set('dealerHand', deck.dealDealer());
-      return this.on('stand', function() {
-        return console.log('App -> stand');
+      this.get('playerHand').on('stand', function() {
+        var _results;
+        console.log('App -> stand');
+        this.get('dealerHand').models[0].flip();
+        _results = [];
+        while (this.get('dealerHand').scores() < 17) {
+          _results.push(this.get('dealerHand').hit());
+        }
+        return _results;
       }, this);
+      this.get('dealerHand').on('bust', function() {
+        return console.log('app --> dealerHand bust');
+      });
+      return this.get('playerHand').on('bust', function() {
+        return alert('you are busted');
+      });
     };
 
     return App;

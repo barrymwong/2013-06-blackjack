@@ -28,7 +28,11 @@
     };
 
     AppView.prototype.initialize = function() {
-      return this.render();
+      var _this = this;
+      this.render();
+      return this.model.get('dealerHand').on('bust', function() {
+        return console.log('AppView --> ');
+      });
     };
 
     AppView.prototype.render = function() {

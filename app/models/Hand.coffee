@@ -5,19 +5,11 @@ class window.Hand extends Backbone.Collection
   initialize: (array, @deck, @isDealer) ->
     if @scores()[0] is 21 then @stand ->
 
-    # @on 'stand', ( ->
-    #   console.log 'init -> stand'
-    # ), @
-
-    @on 'bust', ( ->
-      console.warn 'init -> bust'
-
-    ), @
-
   hit: ->
     @add(@deck.pop()).last()
-    if @scores()[0] > 21 then @bust -> # only checking first score of array for now
-    else if @scores()[0] is 21 then @stand ->
+    if @scores()[0] > 21 then @bust()
+    # if @scores()[0] > 21 then @bust -> # only checking first score of array for now
+    # else if @scores()[0] is 21 then @stand ->
 
   scores: ->
     # The scores are an array of potential scores.
@@ -33,10 +25,13 @@ class window.Hand extends Backbone.Collection
 
   stand: ->
     # switch to dealer, reveal card
+    @get()
     @trigger 'stand', @
-    console.log 'stand'
+    # console.log @
 
   bust: ->
     # render html to say you lost
-    @trigger 'stand', @
-    console.warn 'bust'
+    @trigger 'bust', @
+
+  add17: ->
+   if(@scores[0] < 17) then @hit()
